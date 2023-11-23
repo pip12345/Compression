@@ -1,0 +1,5 @@
+# ninja log v5
+0	420	7224825317743058	CMakeFiles/Compression.dir/main.cpp.obj	5b31afd1022d76eb
+1	132	7224825499947715	build.ninja	9e48e5b17563fded
+2	250	7224825503008393	CMakeFiles/Compression.dir/lzw.cpp.obj	382e744e65875631
+251	360	7224825504078637	Compression.exe	74ef93c4d2a04995
