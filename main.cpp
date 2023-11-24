@@ -1,10 +1,11 @@
 #include <iostream>
 #include <string>
 #include "lzw.h"
+#include "huff.h"
 #include "file_handler.h"
 
 int main() {
-    files::file_handler file;
+    files::File_handler file;
 
     std::string words{};
 
@@ -18,8 +19,9 @@ int main() {
         std::cout << "lol error" << std::endl;
     }
 
+    huff::Tree tree;
 
-
+    tree.string_to_node("Programming");
 
     std::cout << "Done!" << std::endl;
 }

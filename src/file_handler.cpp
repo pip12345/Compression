@@ -2,7 +2,7 @@
 
 namespace files {
 
-    bool file_handler::open(const std::string& file_name) {
+    bool File_handler::open(const std::string& file_name) {
         file_in.open(file_name);
 
         if (!file_in) {
@@ -19,7 +19,7 @@ namespace files {
         }
     }
 
-    bool file_handler::write(const std::string& file_name) {
+    bool File_handler::write(const std::string& file_name) {
         file_out.open(file_name);
 
         if(!file_out) {
