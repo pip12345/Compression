@@ -2,6 +2,7 @@
 #define COMPRESSION_HUFF_H
 
 #include <iostream>
+#include <sstream>
 #include <queue>
 #include <string>
 #include <vector>
@@ -40,16 +41,23 @@ namespace huff {
         void add(std::string str); // Add a string to the tree
         void add(std::stringstream buffer); // Add the contents of an entire buffer to the tree
 
-        std::vector<Node> string_to_node(std::string str);
+//          encode, returns string of encoded message
+//          decode, returns string of decoded message
+
+        std::vector<Node> string_to_nodes(std::string str); // Returns a frequency-sorted vector of a pair of each character and its frequency
 
     private:
+
         // Hold pointers to the current node's root, left and right node, used for building/navigating the tree
-        Node *root, *left, *right;
+        Node *root{}, *left{}, *right{};
 
         // Min priority queue (min heap) used for building the Huffman tree
         std::priority_queue<Node*, std::vector<Node*>, Node_compare> min_heap;
 
         void min_heap_add(Node n);
+        void min_heap_add(std::vector<Node> n);
+
+        static bool cmp_map_sort(std::pair<char, int>& a, std::pair<char, int>& b);
 
 //        void min_heap_fill(std::string str);
 //        void min_heap_fill(std::stringstream  buffer);

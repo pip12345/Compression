@@ -21,7 +21,7 @@ int main() {
 
     huff::Tree tree;
 
-    tree.string_to_node("Programming");
+    auto nodes = tree.string_to_nodes("Programming");
 
     std::cout << "Done!" << std::endl;
 }
