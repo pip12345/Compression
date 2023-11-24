@@ -3,6 +3,6 @@
 
 ## About
 This repository includes an example tool implementing compression and decompression using Huffman coding and the 
-Lempel Ziv Welch algorithm.
+Lempel-Ziv-Welch algorithm.
 
 ## More here later

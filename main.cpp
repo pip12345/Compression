@@ -1,15 +1,25 @@
 #include <iostream>
-#include <vector>
 #include <string>
 #include "lzw.h"
+#include "file_handler.h"
 
 int main() {
-    std::vector<std::string> msg{"Hello", "C++", "World", "from", "VS Code", "and the C++ extension!"};
+    files::file_handler file;
 
-    for (const std::string &word: msg) {
-        std::cout << word << " ";
+    std::string words{};
+
+    if(file.open("../test.txt")) {
+
+        // Do something to the buffer here
+        file.buffer << "fuck";
+
+        file.write("../test_compressed.txt");
+    } else {
+        std::cout << "lol error" << std::endl;
     }
 
-    lzw::test();
-    std::cout << std::endl;
+
+
+
+    std::cout << "Done!" << std::endl;
 }
