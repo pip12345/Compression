@@ -1,5 +1,8 @@
 # ninja log v5
-0	420	7224825317743058	CMakeFiles/Compression.dir/main.cpp.obj	5b31afd1022d76eb
-1	132	7224825499947715	build.ninja	9e48e5b17563fded
 2	250	7224825503008393	CMakeFiles/Compression.dir/lzw.cpp.obj	382e744e65875631
-251	360	7224825504078637	Compression.exe	74ef93c4d2a04995
+2	355	7224872735760341	CMakeFiles/Compression.dir/main.cpp.obj	da0262a4bb469402
+0	112	7224873220415918	build.ninja	9e48e5b17563fded
+355	454	7224872736730558	Compression.exe	dae34d6290e03445
+11	252	7224872734740272	CMakeFiles/Compression.dir/src/lzw.cpp.obj	68a2e78f291cd2df
+0	338	7224855202608417	CMakeFiles/Compression.dir/src/main.cpp.obj	69c724c712cf7a4b
+6	47	7224872732692722	CMakeFiles/Compression.dir/src/huff.cpp.obj	327269cb01160e23

@@ -51,15 +51,24 @@ build cmake_object_order_depends_target_Compression: phony || CMakeFiles/Compres
 
 build CMakeFiles/Compression.dir/main.cpp.obj: CXX_COMPILER__Compression_unscanned_Debug C$:/Users/Pip/Documents/Personal/School/Hbo$ (main)/ELT/Advanced$ Programming$ Concepts/Projects/Compression/main.cpp || cmake_object_order_depends_target_Compression
   DEP_FILE = CMakeFiles\Compression.dir\main.cpp.obj.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
+  FLAGS = -g -std=gnu++2a -fdiagnostics-color=always
+  INCLUDES = -I"C:/Users/Pip/Documents/Personal/School/Hbo (main)/ELT/Advanced Programming Concepts/Projects/Compression/./include"
   OBJECT_DIR = CMakeFiles\Compression.dir
   OBJECT_FILE_DIR = CMakeFiles\Compression.dir
 
-build CMakeFiles/Compression.dir/lzw.cpp.obj: CXX_COMPILER__Compression_unscanned_Debug C$:/Users/Pip/Documents/Personal/School/Hbo$ (main)/ELT/Advanced$ Programming$ Concepts/Projects/Compression/lzw.cpp || cmake_object_order_depends_target_Compression
-  DEP_FILE = CMakeFiles\Compression.dir\lzw.cpp.obj.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
+build CMakeFiles/Compression.dir/src/huff.cpp.obj: CXX_COMPILER__Compression_unscanned_Debug C$:/Users/Pip/Documents/Personal/School/Hbo$ (main)/ELT/Advanced$ Programming$ Concepts/Projects/Compression/src/huff.cpp || cmake_object_order_depends_target_Compression
+  DEP_FILE = CMakeFiles\Compression.dir\src\huff.cpp.obj.d
+  FLAGS = -g -std=gnu++2a -fdiagnostics-color=always
+  INCLUDES = -I"C:/Users/Pip/Documents/Personal/School/Hbo (main)/ELT/Advanced Programming Concepts/Projects/Compression/./include"
   OBJECT_DIR = CMakeFiles\Compression.dir
-  OBJECT_FILE_DIR = CMakeFiles\Compression.dir
+  OBJECT_FILE_DIR = CMakeFiles\Compression.dir\src
+
+build CMakeFiles/Compression.dir/src/lzw.cpp.obj: CXX_COMPILER__Compression_unscanned_Debug C$:/Users/Pip/Documents/Personal/School/Hbo$ (main)/ELT/Advanced$ Programming$ Concepts/Projects/Compression/src/lzw.cpp || cmake_object_order_depends_target_Compression
+  DEP_FILE = CMakeFiles\Compression.dir\src\lzw.cpp.obj.d
+  FLAGS = -g -std=gnu++2a -fdiagnostics-color=always
+  INCLUDES = -I"C:/Users/Pip/Documents/Personal/School/Hbo (main)/ELT/Advanced Programming Concepts/Projects/Compression/./include"
+  OBJECT_DIR = CMakeFiles\Compression.dir
+  OBJECT_FILE_DIR = CMakeFiles\Compression.dir\src
 
 
 # =============================================================================
@@ -69,7 +78,7 @@ build CMakeFiles/Compression.dir/lzw.cpp.obj: CXX_COMPILER__Compression_unscanne
 #############################################
 # Link the executable Compression.exe
 
-build Compression.exe: CXX_EXECUTABLE_LINKER__Compression_Debug CMakeFiles/Compression.dir/main.cpp.obj CMakeFiles/Compression.dir/lzw.cpp.obj
+build Compression.exe: CXX_EXECUTABLE_LINKER__Compression_Debug CMakeFiles/Compression.dir/main.cpp.obj CMakeFiles/Compression.dir/src/huff.cpp.obj CMakeFiles/Compression.dir/src/lzw.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Compression.dir

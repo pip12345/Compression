@@ -10,6 +10,6 @@ int main() {
         std::cout << word << " ";
     }
 
-    test();
+    lzw::test();
     std::cout << std::endl;
 }
