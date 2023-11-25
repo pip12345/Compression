@@ -33,18 +33,14 @@ namespace huff {
 
     class Tree {
     public:
-        Tree(std::stringstream buffer); // Build a tree out of the passed stringstream
-        Tree(std::string string); // Build a tree out of the passed string
+        explicit Tree(const std::stringstream& buffer); // Build a tree out of the passed stringstream
+        explicit Tree(const std::string& string); // Build a tree out of the passed string
         Tree(); // Empty tree
 
-        void add(char data, int freq); // Add a character with a certain frequency to the tree
         void add(const std::string& str); // Add a string to the tree
         void add(const std::stringstream& buffer); // Add the contents of an entire buffer to the tree
 
-        void print_tree();
-
-//          encode, returns string of encoded message
-//          decode, returns string of decoded message
+        void print_tree(); // Print tree
 
 
 
@@ -65,27 +61,19 @@ namespace huff {
 
         static bool cmp_map_sort(std::pair<char, int>& a, std::pair<char, int>& b);
 
-//        void min_heap_fill(std::string str);
-//        void min_heap_fill(std::stringstream  buffer);
-
-
-
-        //std::vector<Node> pool;
-        //std::unordered_map<char, std::vector<bool>> huffmanCode;
-
-        // traverse the Huffman Tree and store Huffman Codes in a map.
-        //void fillmap(Node *node, const std::vector<bool> &str);
-
-        // Builds Huffman Tree and decode given input text
-        //void buildHuffmanTree(const std::string &text);
-
-        //std::vector<bool> encode(const std::string &text);
-
-        // traverse the Huffman Tree and decode the encoded string
-        //std::string decode(const std::vector<bool> &encoded);
-
     };
 
+    class Huffman_coder {
+    public:
+        std::string encode(); // Encode and return the encoded string
+        std::string return_freq_table(); // Returns the freq_table as a string which is required for decoding
+
+        void add_freq_table(std::string); // Adds freq_table to tree
+        void decode(std::string); // decodes passed string using current freq_table
+
+    private:
+        Tree tree();
+    };
 
 }
 

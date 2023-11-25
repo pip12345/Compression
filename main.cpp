@@ -19,11 +19,7 @@ int main() {
         std::cout << "lol error" << std::endl;
     }
 
-    huff::Tree tree;
-
-    //auto nodes = tree.string_to_nodes("Programming");
-
-    tree.add("Programming");
+    huff::Tree tree("Programming");
 
     tree.print_tree();
 

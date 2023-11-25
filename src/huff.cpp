@@ -1,12 +1,18 @@
 #include "huff.h"
 
-#include <unordered_map>
+#include <map>
 #include <algorithm>
 
 namespace huff {
 
-    Tree::Tree() {
+    Tree::Tree() {}
 
+    Tree::Tree(const std::stringstream &buffer) {
+        add(buffer);
+    }
+
+    Tree::Tree(const std::string &string) {
+        add(string);
     }
 
     bool Tree::cmp_map_sort(std::pair<char, int> &a, std::pair<char, int> &b) {
@@ -15,9 +21,9 @@ namespace huff {
 
     std::vector<Node> Tree::string_to_nodes(std::string str) {
 
-        /// Count the frequency of each character, unsorted
+        /// Count the frequency of each character, output map is sorted alphabetically first
 
-        std::unordered_map<char, int> freq_map; // holds a map of each character and its frequency
+        std::map<char, int> freq_map; // holds a map of each character and its frequency, sorted alphabetically
         std::vector<std::pair<char, int>> freq_sorted{}; // Sorted by-value vector of the map
         std::vector<Node> nodes{};
 
@@ -36,14 +42,14 @@ namespace huff {
 //            std::cout << it.first << ' ' << it.second << '\n';
 //        }
 
-        /// Sort by value
+        /// Now re-sort by frequency
 
-        // Copy unsorted map into vector
+        // Copy map into vector
         for (auto& it : freq_map) {
             freq_sorted.push_back(it);
         }
 
-        // Sort
+        // Sort by frequency
         std::sort(freq_sorted.begin(), freq_sorted.end(), cmp_map_sort);
 
 //        for (auto& it : freq_sorted) {
@@ -123,8 +129,4 @@ namespace huff {
     void Tree::print_tree() {
         print_from_node(root, "");
     }
-
-
-
-
 }
