@@ -7,8 +7,8 @@ namespace huff {
         return a.second < b.second;
     }
 
-    void Tree::add_freq_table(const std::vector<Node>& n) {
-        for (auto i : n) {
+    void Tree::add_freq_table(const std::vector<Node> &n) {
+        for (auto i: n) {
             min_heap.push(new Node(i.data, i.freq));
         }
         build_tree();
@@ -51,7 +51,7 @@ namespace huff {
         print_from_node(n->right, code_recursive + "1"); // Right child, add 1 to the code
     }
 
-    void Tree::coding_table_from_node(Node *n, std::string code_recursive, std::map<char, std::string>& coding_table) {
+    void Tree::coding_table_from_node(Node *n, std::string code_recursive, std::map<char, std::string> &coding_table) {
         // If null, we've reached the end, break from recursion
         if (n == nullptr) {
             return;
@@ -77,7 +77,7 @@ namespace huff {
         return temp_coding_table;
     }
 
-    std::vector<Node> Huffman_coder::string_to_nodes(const std::string& text_str) {
+    std::vector<Node> Huffman_coder::string_to_nodes(const std::string &text_str) {
         /// Count the frequency of each character, output map is sorted alphabetically first
 
         std::map<char, int> freq_map; // holds a map of each character and its frequency, sorted alphabetically
@@ -85,7 +85,7 @@ namespace huff {
         std::vector<Node> nodes{};
 
         // Traverse the string
-        for(int i{0}; text_str[i]; i++) {
+        for (int i{0}; text_str[i]; i++) {
             // If the current character hasn't been found before, set frequency to 1
             if (freq_map.find(text_str[i]) == freq_map.end()) {
                 freq_map.insert(std::make_pair(text_str[i], 1));
@@ -102,7 +102,7 @@ namespace huff {
         /// Now re-sort by frequency
 
         // Copy map into vector
-        for (auto& it : freq_map) {
+        for (auto &it: freq_map) {
             freq_sorted.push_back(it);
         }
 
@@ -114,7 +114,7 @@ namespace huff {
         //        }
 
         /// Convert sorted vector to nodes and add them to nodes vector
-        for (auto& it : freq_sorted) {
+        for (auto &it: freq_sorted) {
             Node temp(it.first, it.second);
             nodes.push_back(temp);
         }
@@ -122,20 +122,76 @@ namespace huff {
         return nodes;
     }
 
+    std::string Huffman_coder::code_with_coding_table(const std::string &text_str,
+                                                      const std::map<char, std::string> &coding_table) {
+
+        auto temp = coding_table.find('P');
+        std::string coded{};
+
+        for (auto i: text_str) {
+            coded.append(coding_table.find(i)->second);
+        }
+
+        return coded;
+    }
+
+    std::string Huffman_coder::decode_with_coding_table(std::string encoded_text_str,
+                                                        const std::map<char, std::string> &coding_table) {
+
+        std::string read_buffer{};
+        std::string output_string{};
+
+        // We will copy an element from encoded_text_str to read_buffer, then remove it from the encoded_text_str
+        // Read_buffer will be checked to the coding table:
+        // If the contents of read_buffer are equal to the code of a character from the coding table,
+        // then the corrresponding character will be added to the output string and read_buffer will be wiped
+        // This will continue until encoded_text_str is empty;
+
+        // add a code number to the buffer until it is something that exists inside the coding table
+        while (!encoded_text_str.empty()) {
+            read_buffer.push_back(encoded_text_str.front()); // Add front element of encoded text to read buffer
+
+            encoded_text_str.erase(encoded_text_str.begin()); // delete front element from encoded text
+
+            // Check if the contents of read buffer correspond to a character in the map
+            /// TO DO THIS PART
+            /// need inverted table somehow? or run through map linearly checking everything?
+            std::cout << "read buffer:      " << read_buffer << std::endl;
+            std::cout << "encoded_text_str: " << encoded_text_str << std::endl;
+
+                // if so, add to output string
+
+        }
+
+        if (!read_buffer.empty()) {
+            std::cerr << "read_buffer wasn't empty, therefore a character was in the decoding string that wasn't encoded in the coding table!";
+        }
+
+        return output_string;
+    }
+
     std::string Huffman_coder::encode(const std::string &text_str) {
-        auto nodes = string_to_nodes(text_str);
-        tree.add_freq_table(nodes);
+        auto freq_table = string_to_nodes(text_str);
+        tree.add_freq_table(freq_table);
         auto coding_table = tree.return_coding_table();
         tree.print_debug_tree();
 
         // encode message with coding table
+        auto coded_message = code_with_coding_table(text_str, coding_table);
+
         // return encoded message
-
-        return "placeholder";
+        return coded_message;
     }
 
-    std::string Huffman_coder::code_with_coding_table(const std::string &text_str,
-                                                      const std::map<char, std::string> &coding_table) {
-        return std::__cxx11::string();
+    std::string Huffman_coder::decode(const std::string &encoded_text_str, const std::string &freq_table_str) {
+
+        auto freq_table = string_to_nodes("Programming"); /// TO DO ADD THIS, FREQ_TABLE_STR TO FREQ_TABLE INSTEAD OF STRING_TO_NODES
+        tree.add_freq_table(freq_table);
+        auto coding_table = tree.return_coding_table();
+
+        decode_with_coding_table(encoded_text_str, coding_table);
+
     }
+
+
 }

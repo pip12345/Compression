@@ -20,8 +20,13 @@ int main() {
         std::cout << "lol error" << std::endl;
     }
 
-    std::cout << hcoder.encode("Programming");
+    std::string input_message = "Programming";
 
+    std::cout << "Input: " << input_message << std::endl;
+    auto input_coded = hcoder.encode(input_message);
+    std::cout << "Output: " << input_coded << std::endl;
+
+    auto input_decoded = hcoder.decode("010001101111001100101101011100111", "blah blah fix this");
 
     std::cout << "\nDone!" << std::endl;
 }
