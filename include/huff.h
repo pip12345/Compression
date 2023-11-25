@@ -6,6 +6,7 @@
 #include <queue>
 #include <string>
 #include <vector>
+#include <map>
 
 namespace huff {
 
@@ -31,18 +32,14 @@ namespace huff {
         }
     };
 
+    // Builds the tree from a passed frequency table and outputs the coding table of the tree
     class Tree {
     public:
-        explicit Tree(const std::stringstream& buffer); // Build a tree out of the passed stringstream
-        explicit Tree(const std::string& string); // Build a tree out of the passed string
-        Tree(); // Empty tree
 
-        void add(const std::string& str); // Add a string to the tree
-        void add(const std::stringstream& buffer); // Add the contents of an entire buffer to the tree
+        void add_freq_table(const std::vector<Node>& n); // Create tree out of the added frequency table
+        std::map<char, std::string> return_coding_table(); // Returns coding table of each character by walking down the tree
 
-        void print_tree(); // Print tree
-
-
+        void print_debug_tree(); // Print tree
 
     private:
 
@@ -50,29 +47,40 @@ namespace huff {
         Node *root{}, *left{}, *right{};
 
         // Min priority queue (min heap) used for building and storing the Huffman tree
-        std::priority_queue<Node*, std::vector<Node*>, Node_compare> min_heap;
+        std::priority_queue<Node*, std::vector<Node*>, Node_compare> min_heap{};
 
-        std::vector<Node> string_to_nodes(std::string str); // Returns a frequency-sorted vector of a pair of each character and its frequency
+        void build_tree(); // Builds the huffman inside the min heap with the current nodes
 
-        void min_heap_add(const Node& n);
-        void min_heap_add(const std::vector<Node>& n);
-        void build_tree();
-        void print_from_node(Node* n, std::string huff_code); // Recursively used to print all child nodes starting from node n
-
-        static bool cmp_map_sort(std::pair<char, int>& a, std::pair<char, int>& b);
+        // The following functions recursively navigate the tree to print it or create the coding table
+        // usage: print_from_node(root node to walk down from, empty string to add the recursive output to)
+        // usage: coding_table_from_node(root node to walk down from, empty string to add the recursive output to, coding table map to fill with coding information)
+        void print_from_node(Node* n, std::string code_recursive);
+        void coding_table_from_node(Node *n, std::string code_recursive, std::map<char, std::string>& coding_table);
 
     };
 
+    // Encodes and decodes text_strings
+    // Encoding: convert a text_string into a frequency table, passes this to Tree to build the tree and get the coding table, then encodes the message with the coding table.
+    // Decoding: passes an encoded_text_string with frequency table to Tree to build the tree and get the coding table, then decodes the message with the coding table.
     class Huffman_coder {
     public:
-        std::string encode(); // Encode and return the encoded string
-        std::string return_freq_table(); // Returns the freq_table as a string which is required for decoding
+        std::string encode(const std::string& text_str); // Encode passed text_str and return the encoded text_str
+        std::string return_freq_table_str(); // Returns the freq_table_str which is required metadata for decoding
 
-        void add_freq_table(std::string); // Adds freq_table to tree
-        void decode(std::string); // decodes passed string using current freq_table
+        std::string decode(const std::string& encoded_text_str, const std::string& freq_table_str); // returns decoded encoded_text_str of the passed encoded_text_str and freq_table_str
 
     private:
-        Tree tree();
+        Tree tree{};
+
+        std::string code_with_coding_table(const std::string& text_str, const std::map<char, std::string>& coding_table);
+
+        // Conversions
+        std::vector<Node> string_to_nodes(const std::string& text_str); // Returns a frequency-sorted Node vector of a pair of each character and its frequency
+        std::vector<Node> freq_table_str_to_nodes(const std::string& freq_table_str);
+        std::string nodes_to_freq_table_str(const std::vector<Node>& nodes);
+
+
+        static bool cmp_map_sort(std::pair<char, int>& a, std::pair<char, int>& b);
     };
 
 }

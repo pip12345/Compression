@@ -6,6 +6,7 @@
 
 int main() {
     files::File_handler file;
+    huff::Huffman_coder hcoder;
 
     std::string words{};
 
@@ -19,9 +20,8 @@ int main() {
         std::cout << "lol error" << std::endl;
     }
 
-    huff::Tree tree("Programming");
+    std::cout << hcoder.encode("Programming");
 
-    tree.print_tree();
 
-    std::cout << "Done!" << std::endl;
+    std::cout << "\nDone!" << std::endl;
 }
