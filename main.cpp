@@ -12,7 +12,7 @@ int main() {
     if(file.open("../test.txt")) {
 
         // Do something to the buffer here
-        file.buffer << "fuck";
+        file.buffer << "testsomemore";
 
         file.write("../test_compressed.txt");
     } else {
@@ -21,7 +21,11 @@ int main() {
 
     huff::Tree tree;
 
-    auto nodes = tree.string_to_nodes("Programming");
+    //auto nodes = tree.string_to_nodes("Programming");
+
+    tree.add("Programming");
+
+    tree.print_tree();
 
     std::cout << "Done!" << std::endl;
 }

@@ -38,24 +38,30 @@ namespace huff {
         Tree(); // Empty tree
 
         void add(char data, int freq); // Add a character with a certain frequency to the tree
-        void add(std::string str); // Add a string to the tree
-        void add(std::stringstream buffer); // Add the contents of an entire buffer to the tree
+        void add(const std::string& str); // Add a string to the tree
+        void add(const std::stringstream& buffer); // Add the contents of an entire buffer to the tree
+
+        void print_tree();
 
 //          encode, returns string of encoded message
 //          decode, returns string of decoded message
 
-        std::vector<Node> string_to_nodes(std::string str); // Returns a frequency-sorted vector of a pair of each character and its frequency
+
 
     private:
 
         // Hold pointers to the current node's root, left and right node, used for building/navigating the tree
         Node *root{}, *left{}, *right{};
 
-        // Min priority queue (min heap) used for building the Huffman tree
+        // Min priority queue (min heap) used for building and storing the Huffman tree
         std::priority_queue<Node*, std::vector<Node*>, Node_compare> min_heap;
 
-        void min_heap_add(Node n);
-        void min_heap_add(std::vector<Node> n);
+        std::vector<Node> string_to_nodes(std::string str); // Returns a frequency-sorted vector of a pair of each character and its frequency
+
+        void min_heap_add(const Node& n);
+        void min_heap_add(const std::vector<Node>& n);
+        void build_tree();
+        void print_from_node(Node* n, std::string huff_code); // Recursively used to print all child nodes starting from node n
 
         static bool cmp_map_sort(std::pair<char, int>& a, std::pair<char, int>& b);
 

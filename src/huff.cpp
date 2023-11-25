@@ -9,10 +9,6 @@ namespace huff {
 
     }
 
-    void Tree::min_heap_add(Node n) {
-        min_heap.push(new Node(n.data, n.freq));
-    }
-
     bool Tree::cmp_map_sort(std::pair<char, int> &a, std::pair<char, int> &b) {
         return a.second < b.second;
     }
@@ -64,9 +60,71 @@ namespace huff {
 
     }
 
-    void Tree::add(std::stringstream buffer) {
+    void Tree::add(const std::string& str) {
+        auto nodes = string_to_nodes(str);
+        min_heap_add(nodes);
+    }
+
+    void Tree::add(const std::stringstream& buffer) {
         add(buffer.str());
     }
+
+    void Tree::min_heap_add(const Node& n) {
+        min_heap.push(new Node(n.data, n.freq));
+        build_tree();
+    }
+
+    void Tree::min_heap_add(const std::vector<Node>& n) {
+        for (auto i : n) {
+            min_heap.push(new Node(i.data, i.freq));
+        }
+        build_tree();
+    }
+
+    void Tree::build_tree() {
+        // Iterate while heap has elements
+        while (min_heap.size() > 1) {
+            // Extract the 2 lowest freq items from heap
+            left = min_heap.top();
+            min_heap.pop();
+
+            right = min_heap.top();
+            min_heap.pop();
+
+            // Add a new root node to these two nodes with the frequency being the sum of the frequency of both left and right children
+            // '~' character reserved for indicating the root node
+            root = new Node('~', left->freq + right->freq);
+            root->left = left;
+            root->right = right;
+
+            // Push new tree part back into the min heap
+            min_heap.push(root);
+        }
+    }
+
+    void Tree::print_from_node(Node *n, std::string huff_code) {
+
+        // If null, we've reached the end, break from recursion
+        if (n == nullptr) {
+            return;
+        }
+
+        // Skip the root nodes
+        if (n->data != '~') {
+            std::cout << n->data << ": " << huff_code << "\n";
+        }
+
+        print_from_node(n->left, huff_code + "0"); // Left child, add a 0 to the code
+        print_from_node(n->right, huff_code + "1"); // Right child, add 1 to the code
+
+
+    }
+
+    void Tree::print_tree() {
+        print_from_node(root, "");
+    }
+
+
 
 
 }
