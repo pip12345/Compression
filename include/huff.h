@@ -9,6 +9,15 @@
 
 namespace huff {
 
+    // Reverse keys and values of a map
+    template<typename T, typename U>
+    static std::map<U, T> reverse_map(const std::map<T, U>& og_map) {
+        std::map<U, T> temp_map;
+        for (const auto& it : og_map)
+            temp_map[it.second] = it.first;
+        return temp_map;
+    }
+
     // Min heap node in the huffman tree
     struct Node {
         int freq;
@@ -40,6 +49,7 @@ namespace huff {
         return_coding_table(); // Returns coding table of each character by walking down the tree
 
         void print_debug_tree(); // Print tree
+        void clear_min_heap(); // Clear the contents of the tree
 
     private:
 

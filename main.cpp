@@ -23,10 +23,11 @@ int main() {
     std::string input_message = "Programming";
 
     std::cout << "Input: " << input_message << std::endl;
-    auto input_coded = hcoder.encode(input_message);
-    std::cout << "Output: " << input_coded << std::endl;
+    auto input_message_coded = hcoder.encode(input_message);
+    std::cout << "Output: " << input_message_coded << std::endl;
 
-    auto input_decoded = hcoder.decode("010001101111001100101101011100111", "blah blah fix this");
+    auto input_message_decoded = hcoder.decode("010001101111001100101101011100111", "blah blah fix this");
+    std::cout << "Output: " << input_message_decoded << std::endl;
 
     std::cout << "\nDone!" << std::endl;
 }

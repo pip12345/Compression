@@ -8,6 +8,10 @@ namespace huff {
     }
 
     void Tree::add_freq_table(const std::vector<Node> &n) {
+        // Wipe current contents of min heap (tree)
+        clear_min_heap();
+
+        // Add new freq_table to min_heap
         for (auto i: n) {
             min_heap.push(new Node(i.data, i.freq));
         }
@@ -77,6 +81,12 @@ namespace huff {
         return temp_coding_table;
     }
 
+    void Tree::clear_min_heap() {
+        while(!min_heap.empty()) {
+            min_heap.pop();
+        }
+    }
+
     std::vector<Node> Huffman_coder::string_to_nodes(const std::string &text_str) {
         /// Count the frequency of each character, output map is sorted alphabetically first
 
@@ -140,6 +150,7 @@ namespace huff {
 
         std::string read_buffer{};
         std::string output_string{};
+        auto reversed_table = reverse_map(coding_table);
 
         // We will copy an element from encoded_text_str to read_buffer, then remove it from the encoded_text_str
         // Read_buffer will be checked to the coding table:
@@ -153,13 +164,27 @@ namespace huff {
 
             encoded_text_str.erase(encoded_text_str.begin()); // delete front element from encoded text
 
-            // Check if the contents of read buffer correspond to a character in the map
-            /// TO DO THIS PART
-            /// need inverted table somehow? or run through map linearly checking everything?
+            // Check if the code contents of read buffer correspond to a character in the map
+            // map.find() returns the end iterator if nothing is found
+
+            // If the value exists
+            auto temp = reversed_table.find("010");
+
+            if (reversed_table.find(read_buffer) != reversed_table.end()) {
+
+                /// THIS DOESNT WORK YET
+
+                // add the corresponding character of the code to the output string
+                output_string.push_back(reversed_table.find(read_buffer)->second);
+
+                // Wipe the read_buffer
+                read_buffer.clear();
+            }
+
             std::cout << "read buffer:      " << read_buffer << std::endl;
             std::cout << "encoded_text_str: " << encoded_text_str << std::endl;
+            std::cout << "output_string:    " << output_string << std::endl;
 
-                // if so, add to output string
 
         }
 
@@ -176,10 +201,10 @@ namespace huff {
         auto coding_table = tree.return_coding_table();
         tree.print_debug_tree();
 
-        // encode message with coding table
+        // Encode message with coding table
         auto coded_message = code_with_coding_table(text_str, coding_table);
 
-        // return encoded message
+        // Return encoded message
         return coded_message;
     }
 
@@ -188,9 +213,13 @@ namespace huff {
         auto freq_table = string_to_nodes("Programming"); /// TO DO ADD THIS, FREQ_TABLE_STR TO FREQ_TABLE INSTEAD OF STRING_TO_NODES
         tree.add_freq_table(freq_table);
         auto coding_table = tree.return_coding_table();
+        tree.print_debug_tree();
 
-        decode_with_coding_table(encoded_text_str, coding_table);
+        // Decode message with coding table
+        auto decoded_message = decode_with_coding_table(encoded_text_str, coding_table);
 
+        // Return encoded message
+        return decoded_message;
     }
 
 
