@@ -50,8 +50,6 @@ namespace files {
             while (!buffer.empty()) {
                 std::string temp (8, '0');
 
-                /// TODO: probably still issues in here, check in HxD
-
                 // Put 8 bits in the string
                 if(buffer.length() >= 8) {
                     for (int i{}; i < 8; i++) {

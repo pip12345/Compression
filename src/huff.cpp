@@ -1,6 +1,11 @@
 #include "huff.h"
 #include <algorithm>
 
+/*************************************************************************************************************************
+ *  Implementations of build_tree() and the recursive pathing functions inspired by GeeksforGeeks Huffman Coding tutorial:
+ *  https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/
+ ************************************************************************************************************************/
+
 namespace huff {
 
     bool Huffman_coder::cmp_map_sort(std::pair<char, int> &a, std::pair<char, int> &b) {
@@ -205,7 +210,16 @@ namespace huff {
     }
 
     std::string Huffman_coder::return_freq_table_str(const std::string &text_str) {
-        return nodes_to_freq_table_str(string_to_nodes(text_str));
+        auto freq_table_str = nodes_to_freq_table_str(string_to_nodes(text_str));
+
+        // Append the number of total bits that were in the original coded message to the end
+        // This is needed for decoding later.
+        auto coded_message = encode(text_str);
+        freq_table_str.append("~" + std::to_string(coded_message.length()) + "\n");
+
+        //std::cout << "\n" << freq_table_str;
+
+        return freq_table_str;
     }
 
     std::string Huffman_coder::decode(const std::string &encoded_text_str, const std::string &freq_table_str) {
@@ -224,6 +238,9 @@ namespace huff {
     }
 
     std::string Huffman_coder::nodes_to_freq_table_str(const std::vector<Node> &nodes) {
+        // NOTE: THE OUTPUT OF THIS FUNCTION DOES NOT INCLUDE THE TOTAL LENGTH OF THE CODED MESSAGE
+        // NECESSARY FOR DECODING, THIS IS DONE IN return_freq_table_str
+
         std::string freq_table_str{}; // To save the translated string in
 
         // Walk through the nodes and append the character and its frequency to the string
@@ -231,8 +248,6 @@ namespace huff {
             std::string data_char{nodes[i].data};
             freq_table_str.append(data_char + std::to_string((int) nodes[i].freq) + "\n");
         }
-
-        //std::cout << "\n" << freq_table_str;
 
         return freq_table_str;
     }

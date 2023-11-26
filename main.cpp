@@ -21,7 +21,7 @@ int main() {
         std::cout << "lol error" << std::endl;
     }
 
-    std::string input_message = "Progr";
+    std::string input_message = "Programming gamer time";
 
     std::cout << "Input string:   " << input_message << std::endl;
     auto input_message_coded = hcoder.encode(input_message);
