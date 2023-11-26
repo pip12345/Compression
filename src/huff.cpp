@@ -271,8 +271,14 @@ namespace huff {
             temp_extracted_str.erase(temp_extracted_str.begin()); // Delete the first position
             int node_freq = std::stoi(temp_extracted_str); // Rest of the characters is the freq value
 
-            // Convert into node and push into node vector
-            nodes.push_back(Node(node_char, node_freq)); // Add node with node_char and node_freq to the vector
+            // Convert into node and push into node vector if it's not '~'
+            // Note: '~' is reserved for the internal root character in the tree, and reserved for indicating the
+            // total number of bits inside the encoded string. Therefore, we throw it away so it doesn't end up
+            // in the tree.
+            if (node_char != '~') {
+                nodes.push_back(Node(node_char, node_freq)); // Add node with node_char and node_freq to the vector
+            }
+
 
             // Clear the rest of temp_extracted_str;
             temp_extracted_str.clear();
