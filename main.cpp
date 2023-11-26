@@ -10,7 +10,7 @@ int main() {
 
     std::string words{};
 
-    if(file.open("../test.txt")) {
+    if (file.open("../test.txt")) {
 
         // Do something to the buffer here
         file.buffer << "testsomemore";
@@ -20,14 +20,15 @@ int main() {
         std::cout << "lol error" << std::endl;
     }
 
-    std::string input_message = "Programming";
+    std::string input_message = "This is quite epic";
 
-    std::cout << "Input: " << input_message << std::endl;
+    std::cout << "Input string:   " << input_message << std::endl;
     auto input_message_coded = hcoder.encode(input_message);
-    std::cout << "Output: " << input_message_coded << std::endl;
+    auto input_message_freqtable = hcoder.return_freq_table_str(input_message);
+    std::cout << "Output coded:   " << input_message_coded << std::endl;
 
-    auto input_message_decoded = hcoder.decode("010001101111001100101101011100111", "blah blah fix this");
-    std::cout << "Output: " << input_message_decoded << std::endl;
+    auto input_message_decoded = hcoder.decode(input_message_coded, input_message_freqtable);
+    std::cout << "Output decoded: " << input_message_decoded << std::endl;
 
     std::cout << "\nDone!" << std::endl;
 }

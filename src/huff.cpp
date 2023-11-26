@@ -82,7 +82,7 @@ namespace huff {
     }
 
     void Tree::clear_min_heap() {
-        while(!min_heap.empty()) {
+        while (!min_heap.empty()) {
             min_heap.pop();
         }
     }
@@ -168,11 +168,7 @@ namespace huff {
             // map.find() returns the end iterator if nothing is found
 
             // If the value exists
-            auto temp = reversed_table.find("010");
-
             if (reversed_table.find(read_buffer) != reversed_table.end()) {
-
-                /// THIS DOESNT WORK YET
 
                 // add the corresponding character of the code to the output string
                 output_string.push_back(reversed_table.find(read_buffer)->second);
@@ -181,15 +177,15 @@ namespace huff {
                 read_buffer.clear();
             }
 
-            std::cout << "read buffer:      " << read_buffer << std::endl;
-            std::cout << "encoded_text_str: " << encoded_text_str << std::endl;
-            std::cout << "output_string:    " << output_string << std::endl;
-
+            // std::cout << "read buffer:      " << read_buffer << std::endl;
+            // std::cout << "encoded_text_str: " << encoded_text_str << std::endl;
+            // std::cout << "output_string:    " << output_string << std::endl;
 
         }
 
         if (!read_buffer.empty()) {
-            std::cerr << "read_buffer wasn't empty, therefore a character was in the decoding string that wasn't encoded in the coding table!";
+            std::cerr
+                    << "read_buffer wasn't empty, therefore a character was in the decoding string that wasn't encoded in the coding table!";
         }
 
         return output_string;
@@ -199,7 +195,7 @@ namespace huff {
         auto freq_table = string_to_nodes(text_str);
         tree.add_freq_table(freq_table);
         auto coding_table = tree.return_coding_table();
-        tree.print_debug_tree();
+        //tree.print_debug_tree();
 
         // Encode message with coding table
         auto coded_message = code_with_coding_table(text_str, coding_table);
@@ -208,18 +204,65 @@ namespace huff {
         return coded_message;
     }
 
+    std::string Huffman_coder::return_freq_table_str(const std::string &text_str) {
+        return nodes_to_freq_table_str(string_to_nodes(text_str));
+    }
+
     std::string Huffman_coder::decode(const std::string &encoded_text_str, const std::string &freq_table_str) {
 
-        auto freq_table = string_to_nodes("Programming"); /// TO DO ADD THIS, FREQ_TABLE_STR TO FREQ_TABLE INSTEAD OF STRING_TO_NODES
+        auto freq_table = freq_table_str_to_nodes(freq_table_str);
+
         tree.add_freq_table(freq_table);
         auto coding_table = tree.return_coding_table();
-        tree.print_debug_tree();
+        //tree.print_debug_tree();
 
         // Decode message with coding table
         auto decoded_message = decode_with_coding_table(encoded_text_str, coding_table);
 
         // Return encoded message
         return decoded_message;
+    }
+
+    std::string Huffman_coder::nodes_to_freq_table_str(const std::vector<Node> &nodes) {
+        std::string freq_table_str{}; // To save the translated string in
+
+        // Walk through the nodes and append the character and its frequency to the string
+        for (int i{}; i < nodes.size(); i++) {
+            std::string data_char{nodes[i].data};
+            freq_table_str.append(data_char + std::to_string((int) nodes[i].freq) + "\n");
+        }
+
+        //std::cout << "\n" << freq_table_str;
+
+        return freq_table_str;
+    }
+
+    std::vector<Node> Huffman_coder::freq_table_str_to_nodes(std::string freq_table_str) {
+        std::string temp_extracted_str{};
+        std::vector<Node> nodes{};
+
+        // While the freq_table_str hasn't been fully read out yet
+        while (!freq_table_str.empty()) {
+
+            // Read line until it hits '\n' and put it into temp_extracted_str
+            temp_extracted_str = freq_table_str.substr(0, freq_table_str.find('\n'));
+
+            // Delete extracted part from the string, + 1 to also delete the '\n'
+            freq_table_str.erase(0, temp_extracted_str.length() + 1);
+
+            // Extract data and frequency
+            char node_char = temp_extracted_str[0]; // First position is the character of the node
+            temp_extracted_str.erase(temp_extracted_str.begin()); // Delete the first position
+            int node_freq = std::stoi(temp_extracted_str); // Rest of the characters is the freq value
+
+            // Convert into node and push into node vector
+            nodes.push_back(Node(node_char, node_freq)); // Add node with node_char and node_freq to the vector
+
+            // Clear the rest of temp_extracted_str;
+            temp_extracted_str.clear();
+        }
+
+        return nodes;
     }
 
 

@@ -11,9 +11,9 @@ namespace huff {
 
     // Reverse keys and values of a map
     template<typename T, typename U>
-    static std::map<U, T> reverse_map(const std::map<T, U>& og_map) {
+    static std::map<U, T> reverse_map(const std::map<T, U> &og_map) {
         std::map<U, T> temp_map;
-        for (const auto& it : og_map)
+        for (const auto &it: og_map)
             temp_map[it.second] = it.first;
         return temp_map;
     }
@@ -76,7 +76,7 @@ namespace huff {
     class Huffman_coder {
     public:
         std::string encode(const std::string &text_str); // Encode passed text_str and return the encoded text_str
-        std::string return_freq_table_str(); // Returns the freq_table_str which is required metadata for decoding
+        std::string return_freq_table_str(const std::string &text_str); // Returns the freq_table_str for the passed string which is required metadata for decoding
 
         std::string decode(const std::string &encoded_text_str,
                            const std::string &freq_table_str); // returns decoded encoded_text_str of the passed encoded_text_str and freq_table_str
@@ -91,11 +91,13 @@ namespace huff {
                                              const std::map<char, std::string> &coding_table);
 
         // Conversions
+        // freq table with datatype std::vector<Node> is only used internally. For exporting, the freq table is translated into a freq_table_str
         std::vector<Node> string_to_nodes(
                 const std::string &text_str); // Returns a frequency-sorted Node vector of a pair of each character and its frequency
-        std::vector<Node> freq_table_str_to_nodes(const std::string &freq_table_str);
-
-        std::string nodes_to_freq_table_str(const std::vector<Node> &nodes);
+        std::vector<Node> freq_table_str_to_nodes(
+                std::string freq_table_str); // Converts freq_table_str to a freq_table: std::vector<Node>
+        std::string nodes_to_freq_table_str(
+                const std::vector<Node> &nodes); // Converts freq table: std::vector<Node> into freq_table_str
 
 
         static bool cmp_map_sort(std::pair<char, int> &a, std::pair<char, int> &b);
