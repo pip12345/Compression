@@ -251,7 +251,8 @@ namespace huff {
             freq_table_str.erase(0, temp_extracted_str.length() + 1);
 
             // Extract data and frequency
-            char node_char = temp_extracted_str[0]; // First position is the character of the node
+
+            char node_char = temp_extracted_str.front(); // First position is the character of the node
             temp_extracted_str.erase(temp_extracted_str.begin()); // Delete the first position
             int node_freq = std::stoi(temp_extracted_str); // Rest of the characters is the freq value
 

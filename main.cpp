@@ -13,14 +13,15 @@ int main() {
     if (file.open("../test.txt")) {
 
         // Do something to the buffer here
-        file.buffer << "testsomemore";
+        auto buffer_coded = hcoder.encode(file.buffer);
+        file.buffer = buffer_coded;
 
-        file.write("../test_compressed.txt");
+        file.write_bits("../test_compressed.pip");
     } else {
         std::cout << "lol error" << std::endl;
     }
 
-    std::string input_message = "This is quite epic";
+    std::string input_message = "Progr";
 
     std::cout << "Input string:   " << input_message << std::endl;
     auto input_message_coded = hcoder.encode(input_message);
