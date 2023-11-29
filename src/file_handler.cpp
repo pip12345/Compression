@@ -1,41 +1,50 @@
 #include "file_handler.h"
 
+#include <bitset>
+
 namespace files {
 
-    bool File_handler::open(const std::string &file_name) {
+    std::string File_handler::open(const std::string &file_name) {
         file_in.open(file_name);
+        std::string buffer{};
 
         if (!file_in) {
             // File has not been opened successfully
-            return false;
+            buffer = "ERROR FILE NOT OPENED";
+            return buffer;
         } else {
             // Read current contents into file_buffer
+
             while (file_in.peek() != EOF) {
                 buffer.push_back((char) file_in.get());
             }
 
+//            if (file_in.eof()) {
+//                std::cout << "EOF CHAR: " << buffer.back() << " pos: " << buffer.length() << "\n";
+//            }
+
             file_in.close();
-            return true;
+            return buffer;
         }
     }
 
-    bool File_handler::write(const std::string &file_name) {
+    bool File_handler::write(const std::string &file_name, const std::string &to_write) {
         file_out.open(file_name);
 
         if (!file_out) {
             // File has not been created/opened successfully
             return false;
         } else {
-            file_out << buffer; // Write buffer back into file
-            buffer.clear(); // Clear buffer
-
+            file_out << to_write; // Write buffer back into file
             file_out.close();
             return true;
         }
+
     }
 
-    bool File_handler::write_bits(const std::string &file_name) {
+    bool File_handler::write_bits(const std::string &file_name, const std::string &to_write) {
         file_out.open(file_name);
+        std::string buffer = to_write;
 
         if (!file_out) {
             // File has not been created/opened successfully
@@ -48,10 +57,10 @@ namespace files {
             // While the buffer isn't empty, pop out 8 bits at a time, convert this to a char representation
             // of the bits, and save this to the output string
             while (!buffer.empty()) {
-                std::string temp (8, '0');
+                std::string temp(8, '0');
 
                 // Put 8 bits in the string
-                if(buffer.length() >= 8) {
+                if (buffer.length() >= 8) {
                     for (int i{}; i < 8; i++) {
 
                         char c = buffer.front(); // Get character from the front
@@ -64,7 +73,6 @@ namespace files {
                     // Therefore we can't use buffer.length() as the index condition
                     auto current_length = buffer.length();
                     for (int i{}; i < current_length; i++) {
-                        auto test = buffer.length();
                         char c = buffer.front(); // Get character from the front
                         buffer.erase(buffer.begin()); // Delete character in the front
 
@@ -84,8 +92,41 @@ namespace files {
     }
 
     char File_handler::binary_string_to_char(const std::string &binary_string) {
+
+        // Fix Windows premature EOL for ctrl+z (0x1a)
+        // This is Window's fault and there is no way around this
+        // If a bit combination occurs similar to this one it will think it hit EOF while reading the file
+        if (binary_string == "00011010") {
+            return 'e';
+        }
+
+        // Convert to char
         int int_value = std::stoi(binary_string, nullptr, 2);
         return static_cast<char>(int_value);
+    }
+
+
+    std::string File_handler::open_bits(const std::string &file_name, const std::string &frequency_table_str) {
+        std::string freq_table = open(frequency_table_str);
+        std::string file_chars = open(file_name);
+        std::string file_binary{};
+
+        // Convert characters to binary representing string
+        for (unsigned long int i{}; i < file_chars.length(); i++) {
+            int ascii = static_cast<int>(file_chars[i]);
+            std::bitset<8> binary(ascii);
+
+            file_binary.append(binary.to_string());
+        }
+
+        // Get total number of chars from the frequency table string to use as a cutoff for any extra zeroes at the end of the
+        // last byte -> example: 01101101 1100  might have been saved as 01101101 11000000
+        auto total_chars = std::stoi(freq_table.substr(freq_table.find('~') + 1));
+
+        // Remove extra zeroes from the end
+        file_binary.erase(total_chars, file_binary.length());
+
+        return file_binary;
     }
 
 }

@@ -244,9 +244,10 @@ namespace huff {
         std::string freq_table_str{}; // To save the translated string in
 
         // Walk through the nodes and append the character and its frequency to the string
+        // '|' character is reserved for subdividing the frequency table!
         for (int i{}; i < nodes.size(); i++) {
             std::string data_char{nodes[i].data};
-            freq_table_str.append(data_char + std::to_string((int) nodes[i].freq) + "\n");
+            freq_table_str.append(data_char + std::to_string((int) nodes[i].freq) + '|');
         }
 
         return freq_table_str;
@@ -259,8 +260,9 @@ namespace huff {
         // While the freq_table_str hasn't been fully read out yet
         while (!freq_table_str.empty()) {
 
-            // Read line until it hits '\n' and put it into temp_extracted_str
-            temp_extracted_str = freq_table_str.substr(0, freq_table_str.find('\n'));
+            // Read line until it hits '|' and put it into temp_extracted_str
+            // This means '|' character is reserved!
+            temp_extracted_str = freq_table_str.substr(0, freq_table_str.find('|'));
 
             // Delete extracted part from the string, + 1 to also delete the '\n'
             freq_table_str.erase(0, temp_extracted_str.length() + 1);

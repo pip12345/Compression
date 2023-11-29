@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.26) # The minimum CMake version used.
+cmake_minimum_required(VERSION 3.22) # The minimum CMake version used.
 project(Compression) # Name of the current project.
 
 add_executable(Compression) # Define a name for executable.
