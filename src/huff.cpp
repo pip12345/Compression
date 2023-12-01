@@ -140,7 +140,6 @@ namespace huff {
     std::string Huffman_coder::code_with_coding_table(const std::string &text_str,
                                                       const std::map<char, std::string> &coding_table) {
 
-        auto temp = coding_table.find('P');
         std::string coded{};
 
         for (auto i: text_str) {
@@ -200,7 +199,7 @@ namespace huff {
         auto freq_table = string_to_nodes(text_str);
         tree.add_freq_table(freq_table);
         auto coding_table = tree.return_coding_table();
-        //tree.print_debug_tree();
+        tree.print_debug_tree();
 
         // Encode message with coding table
         auto coded_message = code_with_coding_table(text_str, coding_table);
@@ -215,7 +214,7 @@ namespace huff {
         // Append the number of total bits that were in the original coded message to the end
         // This is needed for decoding later.
         auto coded_message = encode(text_str);
-        freq_table_str.append("~" + std::to_string(coded_message.length()) + "\n");
+        freq_table_str.append("~" + std::to_string(coded_message.length()) + '|');
 
         //std::cout << "\n" << freq_table_str;
 
@@ -264,7 +263,7 @@ namespace huff {
             // This means '|' character is reserved!
             temp_extracted_str = freq_table_str.substr(0, freq_table_str.find('|'));
 
-            // Delete extracted part from the string, + 1 to also delete the '\n'
+            // Delete extracted part from the string, + 1 to also delete the '|'
             freq_table_str.erase(0, temp_extracted_str.length() + 1);
 
             // Extract data and frequency

@@ -5,7 +5,7 @@
 namespace files {
 
     std::string File_handler::open(const std::string &file_name) {
-        file_in.open(file_name);
+        file_in.open(file_name, std::ios::binary);
         std::string buffer{};
 
         if (!file_in) {
@@ -15,6 +15,7 @@ namespace files {
         } else {
             // Read current contents into file_buffer
 
+            /// Todo: check for illegal characters ~ and | here?
             while (file_in.peek() != EOF) {
                 buffer.push_back((char) file_in.get());
             }
@@ -29,7 +30,7 @@ namespace files {
     }
 
     bool File_handler::write(const std::string &file_name, const std::string &to_write) {
-        file_out.open(file_name);
+        file_out.open(file_name, std::ios::binary);
 
         if (!file_out) {
             // File has not been created/opened successfully
@@ -43,7 +44,7 @@ namespace files {
     }
 
     bool File_handler::write_bits(const std::string &file_name, const std::string &to_write) {
-        file_out.open(file_name);
+        file_out.open(file_name, std::ios::binary);
         std::string buffer = to_write;
 
         if (!file_out) {
@@ -96,9 +97,9 @@ namespace files {
         // Fix Windows premature EOL for ctrl+z (0x1a)
         // This is Window's fault and there is no way around this
         // If a bit combination occurs similar to this one it will think it hit EOF while reading the file
-        if (binary_string == "00011010") {
-            return 'e';
-        }
+//        if (binary_string == "00011010") {
+//            return 'e'; // Why e? because it's the most occuring letter
+//        }
 
         // Convert to char
         int int_value = std::stoi(binary_string, nullptr, 2);

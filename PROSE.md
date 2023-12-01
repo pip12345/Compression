@@ -69,7 +69,7 @@ Content:
 
 ## 5. File handling
 - Something about writing bits directly in a file
-- CTRL + Z character triggering EOL in Windows (0x1A)
+- CTRL + Z character triggering EOL in Windows (0x1A) -> fix with std::ios::binary
 
 
 
