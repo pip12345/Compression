@@ -59,6 +59,7 @@ Content:
 
 ## 4. LZW algorithm
 ### 4.1 Introduction
+- No extra included data necessary to decompress, codebook can be reconstructed on the fly from the compressed message
 ### 4.2 Theory behind the algorithm
 ### 4.3 Implementation in the program
 #### Program overview
@@ -81,8 +82,8 @@ Content:
 ## 7.References
 - GeeksforGeeks. *Huffman Coding | Greedy Algo-3*. "https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/", accessed 24 Nov. 2023.
 
-
-
+https://www.geeksforgeeks.org/lzw-lempel-ziv-welch-compression-technique/
+https://cs.carleton.edu/faculty/jondich/courses/cs337_w02/assignments/lzw.html
 
 
 

@@ -20,10 +20,6 @@ namespace files {
                 buffer.push_back((char) file_in.get());
             }
 
-//            if (file_in.eof()) {
-//                std::cout << "EOF CHAR: " << buffer.back() << " pos: " << buffer.length() << "\n";
-//            }
-
             file_in.close();
             return buffer;
         }
@@ -70,6 +66,8 @@ namespace files {
                         temp[i] = c;
                     }
                 } else {
+                    // If there are less than 8 bits left in the buffer, write them in and put all remaining bits to 0
+
                     // Length needs to be saved because elements will get deleted in subsequent runs through the for loop
                     // Therefore we can't use buffer.length() as the index condition
                     auto current_length = buffer.length();
@@ -93,22 +91,11 @@ namespace files {
     }
 
     char File_handler::binary_string_to_char(const std::string &binary_string) {
-
-        // Fix Windows premature EOL for ctrl+z (0x1a)
-        // This is Window's fault and there is no way around this
-        // If a bit combination occurs similar to this one it will think it hit EOF while reading the file
-//        if (binary_string == "00011010") {
-//            return 'e'; // Why e? because it's the most occuring letter
-//        }
-
-        // Convert to char
-        int int_value = std::stoi(binary_string, nullptr, 2);
+        int int_value = std::stoi(binary_string, nullptr, 2); // Convert to char
         return static_cast<char>(int_value);
     }
 
-
-    std::string File_handler::open_bits(const std::string &file_name, const std::string &frequency_table_str) {
-        std::string freq_table = open(frequency_table_str);
+    std::string File_handler::open_bits(const std::string &file_name) {
         std::string file_chars = open(file_name);
         std::string file_binary{};
 
@@ -119,6 +106,15 @@ namespace files {
 
             file_binary.append(binary.to_string());
         }
+
+        return file_binary;
+    }
+
+    std::string File_handler::open_bits(const std::string &file_name, const std::string &frequency_table_str) {
+        std::string freq_table = open(frequency_table_str);
+
+
+        std::string file_binary = open_bits(file_name);
 
         // Get total number of chars from the frequency table string to use as a cutoff for any extra zeroes at the end of the
         // last byte -> example: 01101101 1100  might have been saved as 01101101 11000000

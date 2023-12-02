@@ -45,11 +45,8 @@ namespace huff {
     public:
 
         void add_freq_table(const std::vector<Node> &n); // Create tree out of the added frequency table
-        std::map<char, std::string>
-        return_coding_table(); // Returns coding table of each character by walking down the tree
-
+        std::map<char, std::string> return_coding_table(); // Returns coding table of each character by walking down the tree
         void print_debug_tree(); // Print tree
-        void clear_min_heap(); // Clear the contents of the tree
 
     private:
 
@@ -67,6 +64,7 @@ namespace huff {
         void print_from_node(Node *n, std::string code_recursive);
 
         void coding_table_from_node(Node *n, std::string code_recursive, std::map<char, std::string> &coding_table);
+        void clear_min_heap(); // Clear the contents of the tree
 
     };
 
@@ -92,12 +90,9 @@ namespace huff {
 
         // Conversions
         // freq table with datatype std::vector<Node> is only used internally. For exporting, the freq table is translated into a freq_table_str
-        std::vector<Node> string_to_nodes(
-                const std::string &text_str); // Returns a frequency-sorted Node vector of a pair of each character and its frequency
-        std::vector<Node> freq_table_str_to_nodes(
-                std::string freq_table_str); // Converts freq_table_str to a freq_table: std::vector<Node>
-        std::string nodes_to_freq_table_str(
-                const std::vector<Node> &nodes); // Converts freq table: std::vector<Node> into freq_table_str
+        std::vector<Node> string_to_nodes(const std::string &text_str); // Returns a frequency-sorted Node vector of a pair of each character and its frequency
+        std::vector<Node> freq_table_str_to_nodes(std::string freq_table_str); // Converts freq_table_str to a freq_table: std::vector<Node>
+        std::string nodes_to_freq_table_str(const std::vector<Node> &nodes); // Converts freq table: std::vector<Node> into freq_table_str
 
 
         static bool cmp_map_sort(std::pair<char, int> &a, std::pair<char, int> &b);

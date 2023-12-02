@@ -199,7 +199,7 @@ namespace huff {
         auto freq_table = string_to_nodes(text_str);
         tree.add_freq_table(freq_table);
         auto coding_table = tree.return_coding_table();
-        tree.print_debug_tree();
+        //tree.print_debug_tree();
 
         // Encode message with coding table
         auto coded_message = code_with_coding_table(text_str, coding_table);
