@@ -61,9 +61,9 @@ namespace huff {
         // The following functions recursively navigate the tree to print it or create the coding table
         // usage: print_from_node(root node to walk down from, empty string to add the recursive output to)
         // usage: coding_table_from_node(root node to walk down from, empty string to add the recursive output to, coding table map to fill with coding information)
-        void print_from_node(Node *n, std::string code_recursive);
+        void print_from_node(Node *n, const std::string& code_recursive);
 
-        void coding_table_from_node(Node *n, std::string code_recursive, std::map<char, std::string> &coding_table);
+        void coding_table_from_node(Node *n, const std::string& code_recursive, std::map<char, std::string> &coding_table);
         void clear_min_heap(); // Clear the contents of the tree
 
     };

@@ -13,10 +13,12 @@ target_sources(${target}
         ${CMAKE_SOURCE_DIR}/include/huff.h
         ${CMAKE_SOURCE_DIR}/include/lzw.h
         ${CMAKE_SOURCE_DIR}/include/file_handler.h
+        ${CMAKE_SOURCE_DIR}/include/compression_handler.h
 
         ${CMAKE_SOURCE_DIR}/src/huff.cpp
         ${CMAKE_SOURCE_DIR}/src/lzw.cpp
         ${CMAKE_SOURCE_DIR}/src/file_handler.cpp
+        ${CMAKE_SOURCE_DIR}/src/compression_handler.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/include) # Instruct the compiler where to look for the given header files within this project.

@@ -44,7 +44,7 @@ namespace huff {
         }
     }
 
-    void Tree::print_from_node(Node *n, std::string code_recursive) {
+    void Tree::print_from_node(Node *n, const std::string& code_recursive) {
 
         // If null, we've reached the end, break from recursion
         if (n == nullptr) {
@@ -60,7 +60,7 @@ namespace huff {
         print_from_node(n->right, code_recursive + "1"); // Right child, add 1 to the code
     }
 
-    void Tree::coding_table_from_node(Node *n, std::string code_recursive, std::map<char, std::string> &coding_table) {
+    void Tree::coding_table_from_node(Node *n, const std::string& code_recursive, std::map<char, std::string> &coding_table) {
         // If null, we've reached the end, break from recursion
         if (n == nullptr) {
             return;
@@ -274,7 +274,7 @@ namespace huff {
 
             // Convert into node and push into node vector if it's not '~'
             // Note: '~' is reserved for the internal root character in the tree, and reserved for indicating the
-            // total number of bits inside the encoded string. Therefore, we throw it away so it doesn't end up
+            // total number of bits inside the encoded string. Therefore, we throw it away, so it doesn't end up
             // in the tree.
             if (node_char != '~') {
                 nodes.push_back(Node(node_char, node_freq)); // Add node with node_char and node_freq to the vector
