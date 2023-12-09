@@ -5,7 +5,7 @@
 int main() {
     compression::Compression_handler handler{};
 
-    std::string file = "../test_txt/test";
+    std::string file = "../test_txt/lzw_best";
 
     handler.huff_compress(file);
     handler.huff_decompress(file);

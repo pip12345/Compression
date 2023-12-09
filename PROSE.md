@@ -1,7 +1,6 @@
 # Compression: Huffman coding and the LZW algorithm
 ## By: Floris de Bruin (438652) - Dec. 2023 - Course: Advanced Programming Concepts
 
-#
 **Overview:**
 ```text
 Content:
@@ -25,11 +24,13 @@ Content:
         - 4.3.2 Encoding
         - 4.3.3 Decoding
 + 5. File handling
-+ 6. Evaluation
-+ 7. References
++ 6. Benchmarking
++ 7. Reflection
++ 8. References
 ```
----
+
 ## 1. Introduction
+
 The purpose of the assignment is implementing the compression and decompression of files using the 
 Huffman coding algorithm and the LZW (Lempel–Ziv–Welch) algorithm.
 The learning objectives are to implement both these algorithms, and an interface to encode and decode
@@ -40,10 +41,11 @@ encoding information in a more efficient way. It removes redundant or unnecessar
 less storage space. Compression is at its core about finding patterns and redundancy within data and reducing these 
 redundancies. Both to-be-covered algorithms are lossless, which means that no data may be lost after a cycle of 
 compression and decompression. 
----
+
+
 ## 2. Design Overview
 
-Above is an image of the total program developed for this assignment. The program contains:
+Below is an image of the total program developed for this assignment. The program contains:
 
 - Two algorithms (LZW and Huffman) for compressing and decompressing files
 - A file handler to manage opening, reading and writing binary to/from files
@@ -51,14 +53,14 @@ Above is an image of the total program developed for this assignment. The progra
 
 
 <div style="display: flex">
-<img style="margin: auto" src="docs/img/Overview.png" alt="UML overview of the program" width="10910"/>
+<img style="margin: auto" src="docs/img/Overview.png" alt="UML overview of the program" width="1300"/>
 </div>
 <div style="text-align: center;">
 Figure 1: UML Overview of the program (public methods only)
 </div>
 
 
----
+
 ## 3. Huffman coding
 ### 3.1 Introduction
 Huffman coding is an algorithm that efficiently assigns variable-length codes to different characters in a text file, 
@@ -90,6 +92,13 @@ for the right branch.
 Huffman code. This compressed representation is smaller than the original data, especially when frequent characters are 
 represented by shorter codes. The resulting encoded text has either the coding or frequency table included in order to decode the text.
 
+<div style="display: flex">
+<img style="margin: auto" src="docs/img/huff_encoding.png" alt="Steps for Huffman encoding" width="600"/>
+</div>
+<div style="text-align: center;">
+Figure 2: Steps for Huffman encoding and saving
+</div>
+
 Decoding is simply the same process in reverse if the frequency table is included, or in the case the coding table is included
 the step of building the tree again is skipped.
 
@@ -102,10 +111,35 @@ Each 0 is a left turn and each 1 is a right turn. The letter corresponding to th
 extra overhead that has to be saved with the encoded data. The encoded data can simply be read out and compared with
 the codes in the coding table, and decoded.
 
+<div style="display: flex">
+<img style="margin: auto" src="docs/img/huff_decoding.png" alt="Steps for Huffman decoding" width="800"/>
+</div>
+<div style="text-align: center;">
+Figure 3: Steps for Huffman decoding
+</div>
+
 In order to get consistent encoding and decoding results, some extra rules may be put in place that aren't necessarily
 part of the Huffman algorithm, such as ordering equal weighted leaf nodes alphabetically when constructing the tree.
 These rules are implementation dependent, therefore the exact implementation must be known in order to decode a Huffman
 encoded text.
+
+
+
+#### Example tree:
+
+Below is an example tree for the word "programming". The blue nodes are root nodes that include the sum
+of the total frequencies of all its child nodes. The purple leaf nodes are the characters with their frequency. 
+
+When traversing the tree, a left branch is a '0' and a right branch is a '1'.
+
+The code for each character is the path traversed from the top tree root to a leaf.
+
+<div style="display: flex">
+<img style="margin: auto" src="docs/img/Alphabetically ordered single frequencies.png" alt="Generated tree for the word Programming" width="1300"/>
+</div>
+<div style="text-align: center;">
+Figure 4: Generated tree and code table for the word Programming
+</div>
 
 ### 3.3 Implementation in the program
 #### 3.3.1 Program overview
@@ -119,12 +153,15 @@ The activity diagram below shows the interaction between both classes during enc
 <img style="margin: auto" src="docs/img/Activity diagram Huffman.png" alt="Activity diagram of Huffman code" width="500"/>
 </div>
 <div style="text-align: center;">
-Figure 2: Activity diagram of Huffman_coder and Tree
+Figure 5: Activity diagram of Huffman_coder and Tree
 </div>
 
 #### 3.3.2 Frequency table: counting letters
 
-blabla text about node
+The tree will be built out of nodes. Each node needs to be able to contain both the frequency and a character. The node also contains
+pointers to it's left or right children (if they exist). This allows us to construct a tree out of them.
+
+If it's a root node that only contains a frequency of its children, the character will be set to the reserved symbol '~'.
 
 ```c++
     // Min heap node in the huffman tree
@@ -141,15 +178,24 @@ blabla text about node
     };
 ```
 
-blablabla text about frequency counting and converting it to a std::vector<Node>
 
+
+Since nodes allow us to save characters and their frequency, and have all the necessary infrastructure to build a tree from later, 
+they're also a good medium to build the frequency table with. To be able to build this frequency table, we need to be able to 
+convert a string of text to nodes. The following function delivers that.
+
+In short it does the following:
+
+1) Copy the string into a map to get each character and its frequency
+2) Copy the map into a vector of <char, int> pairs, to allow sorting it by frequency
+3) Convert the by-frequency sorted vector of pairs into a vector of nodes
+4) Return above mentioned vector of nodes
 ```c++
-    std::vector<Node> Huffman_coder::string_to_nodes(const std::string &text_str) {
-        /// Count the frequency of each character, output map is sorted alphabetically first
-
-        std::map<char, int> freq_map; // holds a map of each character and its frequency, sorted alphabetically
-        std::vector<std::pair<char, int>> freq_sorted{}; // Sorted by-frequency vector of the map
-        std::vector<Node> nodes{};
+  std::vector<Node> Huffman_coder::string_to_nodes(const std::string &text_str) {
+  /// Count the frequency of each character, output map is sorted alphabetically first
+        std::map<char, int> freq_map; // Holds a map of each character and its frequency, sorted alphabetically
+        std::vector<std::pair<char, int>> freq_sorted{}; // Sorted by-frequency vector copy of the map
+        std::vector<Node> nodes{}; // Vector of nodes (frequency table) that gets returned
 
         // Traverse the string
         for (int i{0}; text_str[i]; i++) {
@@ -161,6 +207,8 @@ blablabla text about frequency counting and converting it to a std::vector<Node>
                 freq_map[text_str[i]]++;
             }
         }
+        
+    /// Now re-sort by frequency
 
         // Copy map into vector
         for (auto &it: freq_map) {
@@ -170,27 +218,28 @@ blablabla text about frequency counting and converting it to a std::vector<Node>
         // Sort by frequency
         std::sort(freq_sorted.begin(), freq_sorted.end(), cmp_map_sort);
         
-        /// Convert sorted vector to nodes and add them to nodes vector
+    /// Convert sorted vector to nodes and add them to nodes vector
         for (auto &it: freq_sorted) {
             Node temp(it.first, it.second);
             nodes.push_back(temp);
         }
 
         return nodes;
-    }
+  }
 ```
 
 #### 3.3.3 Building the tree
 
-blablabla tree is built from a min_heap
+Now we have the frequency table, we can build a tree from it. We do this with a min-heap.
 
-in class:
+
+Initialized in class:
 ```c++
 // Min priority queue (min heap) used for building and storing the Huffman tree
         std::priority_queue<Node *, std::vector<Node *>, Node_compare> min_heap{};
 ```
 
-blablabla freq table is first added to the min_heap
+In case the min-heap still has contents from a previously generated tree, it is cleared first. After that the contents of the frequency table is pushed into the min-heap.
 
 ```c++
     void Tree::add_freq_table(const std::vector<Node> &n) {
@@ -205,11 +254,21 @@ blablabla freq table is first added to the min_heap
     }
 ```
 
-blablabla then build a tree from it
+We can now construct a tree from the contents of the min-heap. We do this by constructing it inside the same heap. Because 
+the nodes in the std::vector of nodes (the frequency table) was already sorted by frequency, we can easily build a Huffman tree out of it.
+
+We do this the following way for as long as the min-heap has unconnected nodes:
+
+1) Extract the 2 lowest frequency nodes from the heap
+2) Make a new root node with its frequency being the sum of these 2 extracted nodes (reserved character '~')
+3) Connect the 2 lowest frequency nodes to this new root node, 
+4) Push this new root node with the 2 lowest frequency nodes connected back into the min heap.
+
+By repeating this we will slowly build a tree from the nodes in the min-heap until everything is connected.
 
 ```c++
     void Tree::build_tree() {
-        // Iterate while heap has elements
+        // Iterate while heap has loose nodes
         while (min_heap.size() > 1) {
             // Extract the 2 lowest freq items from heap
             left = min_heap.top();
@@ -234,6 +293,11 @@ blablabla then build a tree from it
 
 blablabla it's a recursive tree traversal algorithm and yeets everything into a map
 
+Now the tree is built, we need to be able to find the code for each character in the tree. As explained before the code 
+for each character is the path traversed from the top tree root to a leaf. For this we use a recursive pathing function 
+that will path through the tree. The function keeps passing a string to itself where it will add either a "0" or "1" to depending on whether
+it has taken a left or right turn at each node.
+
 ```c++
     void Tree::coding_table_from_node(Node *n, const std::string& code_recursive, std::map<char, std::string> &coding_table) {
         // If null, we've reached the end, break from recursion
@@ -251,23 +315,22 @@ blablabla it's a recursive tree traversal algorithm and yeets everything into a 
     }
 ```
 
-Blahblah words
-#### Example tree:
+In order to decode the tree, we need to pass the recursive function where the start (root), an empty string it can use
+to build the code in, and a std::map it can use to build the coding table.
 
-Below is an example tree generated by the code for the word "programming". The blue nodes are root nodes that include the sum
-of the total frequencies of all its child nodes. The purple leaf nodes are the characters.  When traversing the tree,
-a left branch is a '0' and a right branch is a '1'. The results of the generated codes for each character
+```c++
+    std::map<char, std::string> Tree::return_coding_table() {
+        std::map<char, std::string> temp_coding_table{};
+        coding_table_from_node(root, "", temp_coding_table);
 
-<div style="display: flex">
-<img style="margin: auto" src="docs/img/Alphabetically ordered single frequencies.png" alt="Generated tree for the word Programming" width="7610"/>
-</div>
-<div style="text-align: center;">
-Figure 3: Generated tree and code table for the word Programming
-</div>
+        return temp_coding_table;
+    }
+```
 
 #### 3.3.5 Encoding
 
-blablabla use coding table to find the corresponding code for each character in the string
+Now we have the coding table for the original string, we can encode it. This is done by looking up the code that
+belongs to each character in the original string with the coding table.
 
 ```c++
     std::string Huffman_coder::code_with_coding_table(const std::string &text_str,
@@ -283,9 +346,21 @@ blablabla use coding table to find the corresponding code for each character in 
     }
 ```
 
+We can now write the binary representing string (a string where each bit is simply a character) and the frequency table of the original text to a file. For this a function 
+is used to be able to write the binary of the coded string to file. The exact way this is done is a detail that's not
+important for understanding the concept of this algorithm, but was a large challenge in implementation regardless.
+
 #### 3.3.6 Decoding
 
-blablabla words
+For decoding we get the frequency table that was included with the encoded data to do the above steps again to generate the coding table.
+It's important to mention that since Huffman coding works with arbitrary length, it's possible the last code written
+to a file is shorter than a byte. Therefore, the information about the total length of the original string is lost during
+encoding. Luckily we write the total length of the original file inside the frequency table that's included with the
+encoded data. When opening a file and converting it back to a binary representing string, this saved length is used
+to get back exactly the data that was encoded, without extra trailing zeroes from trying to fit it into a byte.
+
+Once we have the encoded data back, we decode by reading the encoded data bit by bit and checking if the current sequence 
+of bits is a code that exists in the coding table. We repeat this until we have read all encoded data.
 
 ```c++
     std::string Huffman_coder::decode_with_coding_table(std::string encoded_text_str,
@@ -331,21 +406,30 @@ blablabla words
 ```
 
 
----
+
 
 ## 4. The LZW (Lempel–Ziv–Welch) Algorithm
 ### 4.1 Introduction
 The LZW (Lempel-Ziv-Welch) algorithm is a dictionary-based compression algorithm. It works by replacing sequences of data with codes, 
-building a dictionary of these sequences as it walks through it. When it encounters a repeated sequence, it outputs the corresponding 
-code. This method effectively reduces the size of the data by storing repeated patterns more efficiently.
+building a dictionary of these sequences as it walks through it. When it encounters a repeated sequence saved previously in the dictionary, 
+it outputs the corresponding code. This method effectively reduces the size of the data by storing repeated patterns more efficiently.
 
 What is meant by a "sequence of data" can be anything from words such as "the" which can appear hundreds of times
 in a large text, to simply a small combination of letters such as "th", "ck" and "nk", which usually appear in many different words.
 By encoding these with a single code that is less bits than the individual characters on their own, compression is attained.
+This also means that the more unique sequences there are in an encoded text, the worse the compression will be, since it relies on repetition of sequences.
+In the worst case, there is no compression at all. 
 
 The largest advantage of LZW over Huffman is that the encoded data doesn't need any added frequency table or "code book" 
 to decode it. The dictionary used to encode a file with LZW can be rebuilt while decoding it. 
-This reduces the overhead significantly by eliminating the need to store extra data with the encoded text.
+This reduces the overhead significantly by eliminating the need to store extra data with the encoded text. It is also much faster
+since no complex tree datastructures have to be generated.
+
+To summarize:
+
+Compared to Huffman, LZW achieves a worse compression ratio, but its execution time is much faster, and it does not have any overhead as mentioned above.
+It is important to note that its performance is very much affected by the number of unique sequences within a file, the more there are, the worse the compression.
+
 
 ### 4.2 Theory behind the algorithm
 
@@ -374,14 +458,42 @@ each "code" is takes up in the compressed data.
 This means that a larger dictionary allows more unique sequences of characters to be saved therefore allowing more compression. However, for smaller files with very litle
 repeating sequences of characters, using a large dictionary size will hurt the total attainable compression ratio.
 
+
 ### 4.3 Implementation in the program
 #### 4.3.1 Program overview
 
-- note to self: make an activity diagram pls
+The program is a quite standard implementation of the LZW algorithm. A notable limitation is that it works with
+a non-dynamic dictionary. This means the size of the dictionary can't dynamically be adjusted as it grows. 
+The size of the dictionary is set by LZW_CODED_MSG_BITS in lzw.h.
+This limitation is due to the way conversion to binary is set up. This results in worse compression for smaller files
+when LZW_CODED_MSG_BITS is set very high, or worse compression for bigger files when the number of bits is set too low.
+An extra added to my implementation is that when the dictionary is full, the algorithm will continue encoding but only by 
+looking up the entries in the dictionary.
+
+The basic steps of the LZW algorithm are as follows:
+
+**Encoding:**
+1) First we initialize the dictionary with the default 0..255 ascii characters.
+2) Find the longest entry in the dictionary that matches the current input.
+3) Output the index of the longest entry and remove it from the input.
+4) Add (longest entry + the next value) as a key in the next available spot in the dictionary
+5) Repeat 2 to 4 until everything is encoded
+
+**Decoding:**
+1) First we initialize the dictionary with the default 0..255 ascii characters.
+2) Read the next value and check if it is encoded in the dictionary.
+   1) If it is not:
+      1) Add the previous outputted entry to the current input
+      2) Add the above to the dictionary and output it
+   2) If it is:
+      1) Output the matching entry in the dictionary
+      2) Add the previous outputted entry to the current output, and add this to the dictionary.
+3) Repeat 2 until everything is decoded
+
 
 #### 4.3.2 Encoding
 
-blablabla some words about how encoding works
+The implementation follows the above steps (mostly). Some extra checks are in place for checking if the dictionary is full.
 
 ```c++
     std::string LZW_coder::encode(const std::string &text_str) {
@@ -404,6 +516,8 @@ blablabla some words about how encoding works
             if (dict.count(first_input + next_input)) {
                 first_input += next_input;
             } else if (dict_size <= pow(2, LZW_CODED_MSG_BITS)) {
+                // If dictionary isn't full and first_input + next_input is not in the dictionary
+                
                 // Output code
                 coded_msg.append(int_to_binary_str(dict[first_input]));
 
@@ -433,7 +547,7 @@ blablabla some words about how encoding works
 
 #### 4.3.3 Decoding
 
-blablabla some more words about how decoding works
+This implementation is also mostly identical to the theoretical implementation.
 
 ```c++
         std::string LZW_coder::decode(const std::string &encoded_text_str) {
@@ -475,19 +589,107 @@ blablabla some more words about how decoding works
         }
 ```
 
----
+
 
 ## 5. File handling
-- Something about writing bits directly in a file
-- CTRL + Z character triggering EOL in Windows (0x1A) -> fix with std::ios::binary
+File handling is managed by the File_handler class. This class has functions to both read and write characters
+and individual bits to files. The individual bits are written using binary representing strings.
+These are strings with simply characters of '0' and '1', which can later be written as actual bits in the file.
 
----
+The full code of this class is not necessarily interesting for the purpose of this document, especially since it's too long already.
+However, the concept of binary representing strings is important for understanding the full code.
 
-## 6. Evaluation
+Some interesting parts of the file handling were writing and reading the Huffman encoded data to bits. Since it's
+arbitrary length and usually did not fit in a single byte. The Huffman coded data was cut into pieces of 8 bits and written
+as a byte. For the last sequence of bits that did not fit in a byte, the rest of the bits in the byte were set to zero.
 
----
+In order to be able to read the file again and retrieve the Huffman encoded data, the total length of the original encoded
+data was written in the frequency table file. Using this the last extra trailing zeroes in the last byte could be removed.
 
-## 7.References
+### An interesting issue
+
+Originally when reading files I used std::ifstream() in its default reading mode. This made it read all bytes in the
+file as characters. However, sometimes encoded files would randomly stop read by the filestream. The most fascinating thing
+is that this would only happen on **Windows**, when running the code on Linux everything worked fine.
+
+Painstakingly debugging a sample text where this issue would occur, I traced it down to End Of File (EOF) being triggered
+in the filestream when a specific byte was read. 
+
+The culprit being 0x1A.
+
+After googling it turns out this byte is interpreted by Windows as a CTRL-Z character, which triggers EOF when read. Thanks Windows.
+
+This issue was fixed by running std::ifstream in its std::ios::binary mode which disables any character interpretation and
+conversions.
+
+<div style="display: flex">
+<img style="margin: auto" src="docs/img/EOL_compact.png" alt="EOF being triggered" width="900"/>
+</div>
+<div style="text-align: center;">
+Figure 6: EOF being triggered by 0x1A
+</div>
+
+
+
+## 6. Benchmarking
+
+To test the compression ratios of the algorithms, a couple of different text files and books were compressed with
+both LZW and Huffman. The source, compressed and decompressed files can be found in test_txt.
+
+Below are the benchmark results:
+
+| **File**            | **Uncompressed size** | **Huffman compressed size** | **LZW compressed size** | **LZW bits** | **Huffman compression ratio** | **LZW compression ratio** |
+|---------------------|-----------------------|-----------------------------|-------------------------|--------------|-------------------------------|---------------------------|
+| alice_in_wonderland | 146 kb                | 83 kb                       | 67.9                    | 16           | 1.759                         | 2.15                      |
+| jane_eyre           | 1001 kb               | 564.5 kb                    | 414 kb                  | 18           | 1.774                         | 2.418                     |
+| macbeth             | 100 kb                | 56.8 kb                     | 49.7 kb                 | 16           | 1.760                         | 2.012                     |
+| wuthering_heights   | 647 kb                | 368.4 kb                    | 264 kb                  | 18           | 1.756                         | 2.451                     |
+
+It's interesting to note that LZW actually performs much better than Huffman, although theoretically Huffman should've had a higher compression ratio.
+I'm not exactly sure what the cause of this is, but it could be an oversight in my specific implementation that leads to worse compression.
+
+
+
+Tests to compare the compression for both very unique and non-unique strings and their effects on LZW and Huffman were also conducted:
+
+`“abcdefghijklmnopqrstuvwxyz0123456789{}:"!@#$%^&*()”`
+
+| File         | File size | Overhead size      |
+|--------------|-----------|--------------------|
+| **Original** | 50 bytes  | No overhead        |
+| **LZW**      | 50 bytes  | No overhead        |
+| **Huffman**  | 36 bytes  | 155 bytes overhead |
+
+As expected, a string consisting purely of non-repeating unique characters results in no compression at all for LZW.
+Ignoring the large Huffman overhead due to the rather bulky (and poor) implementation of saving the frequency table, Huffman does
+perform better than LZW here.
+
+`“ababababababababababababababababababababababababab”`
+
+| File         | File size | Overhead size     |
+|--------------|-----------|-------------------|
+| **Original** | 50 bytes  | No overhead       |
+| **LZW**      | 16 bytes  | No overhead       |
+| **Huffman**  | 7 bytes   | 12 bytes overhead |
+
+LZW performs much better here with the repeating sequences. However, Huffman does outperform 
+
+
+
+## 7. Reflection
+
+I learnt a lot from this assignment, of course about the topic of compression algorithms, but also a lot about working with
+binary and properly reading/writing binary files. A lot of abstractions were used in this assignment that lead to (probably)
+less performant code than would've been possible in a more compact implementation. However, I noticed this abstraction and properly
+defining interfaces between classes helped with managing complexity. Essentially being able to close off a piece of complex
+code as a "black box" with a simple interface and not having to worry about breaking it again.
+
+The code could've probably been written a lot more compact, and there are probably a lot of areas for improvement, but all-in-all
+I'm satisfied with the result of a functioning(!) program that can encode and decode files reliably with two different compression
+algorithms and no loss of information.
+
+
+## 8.References
 - GeeksforGeeks. *Huffman Coding | Greedy Algo-3*. "https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/", accessed 24 Nov. 2023.
 - GeeksforGeeks. *LZW (Lempel–Ziv–Welch) Compression technique*. https://www.geeksforgeeks.org/lzw-lempel-ziv-welch-compression-technique/, accessed 2 Dec. 2023.
 - Pizzey Technology. *Huffman coding step-by-step example*. https://www.youtube.com/watch?v=iEm1NRyEe5c, accessed 21 Nov 2023.

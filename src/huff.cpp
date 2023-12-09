@@ -24,7 +24,7 @@ namespace huff {
     }
 
     void Tree::build_tree() {
-        // Iterate while heap has elements
+        // Iterate while heap has loose nodes
         while (min_heap.size() > 1) {
             // Extract the 2 lowest freq items from heap
             left = min_heap.top();
@@ -95,9 +95,9 @@ namespace huff {
     std::vector<Node> Huffman_coder::string_to_nodes(const std::string &text_str) {
         /// Count the frequency of each character, output map is sorted alphabetically first
 
-        std::map<char, int> freq_map; // holds a map of each character and its frequency, sorted alphabetically
-        std::vector<std::pair<char, int>> freq_sorted{}; // Sorted by-frequency vector of the map
-        std::vector<Node> nodes{};
+        std::map<char, int> freq_map; // Holds a map of each character and its frequency, sorted alphabetically
+        std::vector<std::pair<char, int>> freq_sorted{}; // Sorted by-frequency vector copy of the map
+        std::vector<Node> nodes{}; // Vector of nodes (frequency table) that gets returned
 
         // Traverse the string
         for (int i{0}; text_str[i]; i++) {

@@ -6,16 +6,6 @@
 #include <string>
 
 namespace files {
-
-/// Put this in own header file because it needs to include huffman and lzw and stuff later
-//    class Compression_handler {
-//    public:
-//        bool Huffman_file_encode(const std::string& file_name);
-//        bool Huffman_file_decode(const std::string& file_name);
-//
-//    private:
-//    };
-
     // Opens a file and loads it into the buffer, this buffer can then be modified.
     // Afterwards, the buffer can be written back into a file.
     class File_handler {
