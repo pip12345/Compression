@@ -26,6 +26,8 @@ namespace lzw {
             if (dict.count(first_input + next_input)) {
                 first_input += next_input;
             } else if (dict_size <= pow(2, LZW_CODED_MSG_BITS)) {
+                // If dictionary isn't full and first_input + next_input is not in the dictionary
+
                 // Output code
                 coded_msg.append(int_to_binary_str(dict[first_input]));
                 //std::cout << "-: " << dict[first_input] << "\n";

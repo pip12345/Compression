@@ -6,7 +6,7 @@
 
 // 16 bits ~ compresses 285 kb
 // 18 bits ~ compresses 1.1 mb
-#define LZW_CODED_MSG_BITS 16 // Change this to increase the compression, but at the cost of being able to compress less unique character combinations in total
+#define LZW_CODED_MSG_BITS 18 // Change this to increase the compression, but at the cost of being able to compress less unique character combinations in total
 
 namespace lzw {
 
