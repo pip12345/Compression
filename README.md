@@ -8,7 +8,7 @@ Lempel-Ziv-Welch algorithm as an assignment for the course Advanced Programming 
 
 
 
-### Please check PROSE.md for a (lengthy) run through the program and its benchmarking results
+### Please check PROSE.md for a (lengthy) run through the program and its benchmarking results.
 
 
 ## Program Overview
@@ -27,7 +27,7 @@ The program contains:
 UML Overview of the program (public methods only)
 </div>
 
-## File structure
+## File Structure
 
 ```text
 - docs
@@ -57,7 +57,7 @@ UML Overview of the program (public methods only)
     - huff.cpp
     - lzw.cpp
 - test_txt
-    - (...)
+    - (..)
 - CMakeLists.txt
 - main.cpp
 - PROSE.md

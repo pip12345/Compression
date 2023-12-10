@@ -97,7 +97,7 @@ represented by shorter codes. The resulting encoded text has either the coding o
 </div>
 <div style="text-align: center;">
 Figure 2: Steps for Huffman encoding and saving
-</div>
+</div>&nbsp
 
 Decoding is simply the same process in reverse if the frequency table is included, or in the case the coding table is included
 the step of building the tree again is skipped.
@@ -116,7 +116,7 @@ the codes in the coding table, and decoded.
 </div>
 <div style="text-align: center;">
 Figure 3: Steps for Huffman decoding
-</div>
+</div>&nbsp
 
 In order to get consistent encoding and decoding results, some extra rules may be put in place that aren't necessarily
 part of the Huffman algorithm, such as ordering equal weighted leaf nodes alphabetically when constructing the tree.
@@ -609,13 +609,13 @@ data was written in the frequency table file. Using this the last extra trailing
 ### An interesting issue
 
 Originally when reading files I used std::ifstream() in its default reading mode. This made it read all bytes in the
-file as characters. However, sometimes encoded files would randomly stop read by the filestream. The most fascinating thing
+file as characters. However, sometimes encoded files would randomly stop being read by the filestream. The most fascinating thing
 is that this would only happen on **Windows**, when running the code on Linux everything worked fine.
 
 Painstakingly debugging a sample text where this issue would occur, I traced it down to End Of File (EOF) being triggered
 in the filestream when a specific byte was read. 
 
-The culprit being 0x1A.
+The culprit was 0x1A.
 
 After googling it turns out this byte is interpreted by Windows as a CTRL-Z character, which triggers EOF when read. Thanks Windows.
 
@@ -672,7 +672,7 @@ perform better than LZW here.
 | **LZW**      | 16 bytes  | No overhead       |
 | **Huffman**  | 7 bytes   | 12 bytes overhead |
 
-LZW performs much better here with the repeating sequences. However, Huffman does outperform 
+LZW performs much better here with the repeating sequences. However, Huffman does outperform LZW.
 
 
 
