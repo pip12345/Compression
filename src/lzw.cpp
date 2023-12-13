@@ -37,7 +37,6 @@ namespace lzw {
                 first_input = next_input;
             } else {
                 // If the dictionary is full, stop filling it and encode the rest of the file using the current dictionary
-                //coded_msg.append(int_to_binary_str(dict["a"]));
                 coded_msg.append(int_to_binary_str(dict[first_input]));
                 first_input = next_input;
                 if (!overflow_flag) {

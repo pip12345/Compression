@@ -45,7 +45,7 @@ UML Overview of the program (public methods only)
         - Overview.png
         - Tree for programming.png
     - presentation
-        - compression_v2.pptx
+        - compression_v4.pptx
 - include
     - compression_handler.h
     - file_handler.h
