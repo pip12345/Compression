@@ -14,4 +14,6 @@ int main() {
     handler.lzw_decompress(file);
 
     std::cout << "\nDone!" << std::endl;
+
+    return 0;
 }
