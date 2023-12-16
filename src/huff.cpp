@@ -110,12 +110,7 @@ namespace huff {
             }
         }
 
-        //        for (auto& it : freq_map) {
-        //            std::cout << it.first << ' ' << it.second << '\n';
-        //        }
-
         /// Now re-sort by frequency
-
         // Copy map into vector
         for (auto &it: freq_map) {
             freq_sorted.push_back(it);
@@ -123,10 +118,6 @@ namespace huff {
 
         // Sort by frequency
         std::sort(freq_sorted.begin(), freq_sorted.end(), cmp_map_sort);
-
-        //        for (auto& it : freq_sorted) {
-        //            std::cout << it.first << ' ' << it.second << '\n';
-        //        }
 
         /// Convert sorted vector to nodes and add them to nodes vector
         for (auto &it: freq_sorted) {
@@ -180,11 +171,6 @@ namespace huff {
                 // Wipe the read_buffer
                 read_buffer.clear();
             }
-
-            // std::cout << "read buffer:      " << read_buffer << std::endl;
-            // std::cout << "encoded_text_str: " << encoded_text_str << std::endl;
-            // std::cout << "output_string:    " << output_string << std::endl;
-
         }
 
         if (!read_buffer.empty()) {
@@ -215,8 +201,6 @@ namespace huff {
         // This is needed for decoding later.
         auto coded_message = encode(text_str);
         freq_table_str.append("~" + std::to_string(coded_message.length()) + '|');
-
-        //std::cout << "\n" << freq_table_str;
 
         return freq_table_str;
     }

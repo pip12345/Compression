@@ -6,8 +6,7 @@
 #include <string>
 
 namespace files {
-    // Opens a file and loads it into the buffer, this buffer can then be modified.
-    // Afterwards, the buffer can be written back into a file.
+    // Manage opening, reading and writing binary to/from files
     class File_handler {
     public:
         std::string open(const std::string& file_name); // Opens the file with the specified file_name, returns contents of file
