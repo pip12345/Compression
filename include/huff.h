@@ -100,4 +100,4 @@ namespace huff {
 
 }
 
-#endif // HUFF_H
+#endif //COMPRESSION_HUFF_H

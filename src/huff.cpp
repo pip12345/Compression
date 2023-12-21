@@ -174,8 +174,7 @@ namespace huff {
         }
 
         if (!read_buffer.empty()) {
-            std::cerr
-                    << "read_buffer wasn't empty, therefore a character was in the decoding string that wasn't encoded in the coding table!";
+            throw std::runtime_error("read_buffer wasn't empty, therefore a character was in the decoding string that wasn't encoded in the coding table!");
         }
 
         return output_string;

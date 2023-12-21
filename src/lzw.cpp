@@ -6,12 +6,13 @@
 #include <complex>
 
 namespace lzw {
+
     std::string LZW_coder::encode(const std::string &text_str) {
         std::map<std::string, int> dict{};
         int dict_size = 256;
         std::string coded_msg{};
         std::string first_input{}; // String because we need to be able to append characters: 't' + 'h' = "th"
-        bool overflow_flag{false};
+        bool overflow_flag = false;
 
         // Build default dictionary
         for (int i{0}; i < dict_size; i++) {
@@ -30,7 +31,6 @@ namespace lzw {
 
                 // Output code
                 coded_msg.append(int_to_binary_str(dict[first_input]));
-                //std::cout << "-: " << dict[first_input] << "\n";
 
                 // Add first_input + next_input to the dictionary by setting new fake "ascii" value
                 dict[first_input + next_input] = dict_size++;
@@ -123,4 +123,5 @@ namespace lzw {
 
             return lzw_indexes;
         }
+
     }

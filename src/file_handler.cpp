@@ -1,5 +1,4 @@
 #include "file_handler.h"
-
 #include <bitset>
 
 namespace files {
@@ -10,12 +9,9 @@ namespace files {
 
         if (!file_in) {
             // File has not been opened successfully
-            buffer = "ERROR FILE NOT OPENED";
-            return buffer;
+            throw std::runtime_error("Error opening file.");
         } else {
             // Read current contents into file_buffer
-
-            /// Todo: check for illegal characters ~ and | here?
             while (file_in.peek() != EOF) {
                 buffer.push_back((char) file_in.get());
             }
